@@ -8,3 +8,18 @@ logging:
     org.springframework.web: WARN
     com.thoughtmechanix: DEBUG
 
+
+
+info:
+  app:
+    name: "@project.artifactId@"
+    encoding: '@project.build.sourceEncoding@'
+    java:
+      source: '@java.version@'
+      target: '@java.version@'
+      
+management:
+  endpoints:
+      web:
+        exposure: 
+          include: hystrix.stream      
