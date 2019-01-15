@@ -12,12 +12,15 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.thoughtmechanix.licenses.clients.OrganizationDiscoveryClient;
 import com.thoughtmechanix.licenses.clients.OrganizationFeignClient;
+//import com.thoughtmechanix.licenses.clients.OrganizationOAuth2RestTemplateClient;
 import com.thoughtmechanix.licenses.clients.OrganizationRestTemplateClient;
 import com.thoughtmechanix.licenses.config.ServiceConfig;
 import com.thoughtmechanix.licenses.model.License;
 import com.thoughtmechanix.licenses.model.Organization;
 import com.thoughtmechanix.licenses.repository.LicenseRepository;
 
+//@DefaultProperties(commandProperties= {
+//					 @HystrixProperty(name="circuitBreaker.errorThresholdPercentage", value="30")}) //不起作用
 @Service
 public class LicenseService {
 
@@ -46,8 +49,9 @@ public class LicenseService {
                 System.out.println("I am using the feign client");
                 organization = organizationFeignClient.getOrganization(organizationId);
                 break;
-            case "rest":
-                System.out.println("I am using the rest client");
+            case "oauth2":
+                System.out.println("I am using the oauth2 rest client");
+//                organization = organizationOAuth2RestClient.getOrganization(organizationId);
                 organization = organizationRestClient.getOrganization(organizationId);
                 break;
             case "discovery":
@@ -62,22 +66,22 @@ public class LicenseService {
         return organization;
     }
 
-    @HystrixCommand(
-            commandProperties= {
-            	@HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds", value="8000"),
-        		@HystrixProperty(name="metrics.rollingStats.timeInMilliseconds", value="12000"),//要监控的窗口时间长度
-        		@HystrixProperty(name="metrics.rollingStats.numBuckets", value="4"), //分次收集数据，次数要能被监控时间整除
-        		@HystrixProperty(name="circuitBreaker.requestVolumeThreshold", value="4"), //监控阶段最小需要达到的请求次数
-    			@HystrixProperty(name="circuitBreaker.errorThresholdPercentage", value="30"),//失败次数比例，如果达到30%
-    			@HystrixProperty(name="circuitBreaker.sleepWindowInMilliseconds", value="30000") //断路后,再度尝试等待时间窗口
-            },
-        	fallbackMethod = "buildFallbackLicense",
-        	threadPoolKey = "licenseByOrgThreadPool",
-        	threadPoolProperties = {
-        		@HystrixProperty(name = "coreSize", value="30"),
-        		@HystrixProperty(name = "maxQueueSize", value="11")
-        	}
-        )
+//    @HystrixCommand(//getLicense
+//            commandProperties= {
+//            	@HystrixProperty(name="execution.isolation.thread.timeoutInMilliseconds", value="8000"), //允许超时调用的时长，超过则跳闸
+//        		@HystrixProperty(name="metrics.rollingStats.timeInMilliseconds", value="80000"),//要监控统计的时间窗口长度
+//        		@HystrixProperty(name="metrics.rollingStats.numBuckets", value="20"), //分次收集数据，次数要能被监控时间整除
+//        		@HystrixProperty(name="circuitBreaker.requestVolumeThreshold", value="10"), //监控阶段最小需要达到的请求次数
+//    			@HystrixProperty(name="circuitBreaker.errorThresholdPercentage", value="30"),//失败次数比例，如果达到30%
+//    			@HystrixProperty(name="circuitBreaker.sleepWindowInMilliseconds", value="30000") //断路后,再度尝试等待时间窗口
+//            },
+//        	fallbackMethod = "buildFallbackLicense",
+//        	threadPoolKey = "licenseByOrgThreadPool",
+//        	threadPoolProperties = {
+//        		@HystrixProperty(name = "coreSize", value="30"),
+//        		@HystrixProperty(name = "maxQueueSize", value="11")
+//        	}
+//        )
     public License getLicense(String organizationId,String licenseId, String clientType) {
         License license = licenseRepository.findByOrganizationIdAndLicenseId(organizationId, licenseId);
 

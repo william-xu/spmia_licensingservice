@@ -18,6 +18,15 @@ public class ServiceConfig{
   @Value("${signing.key}")
   private String jwtSigningKey="";
 
+  @Value("${hystrix.commandproperties.errorRequestThresholdPercentage}")
+  private String errorRequestThresholdPercentage="";
+  
+  @Value("${zuul.server.addr}")
+  private String zuulServerAddr="";
+
+  public String getErrorRequestThresholdPercentage() {
+	return errorRequestThresholdPercentage;
+  }
 
   public String getJwtSigningKey() {
     return jwtSigningKey;
@@ -35,5 +44,8 @@ public class ServiceConfig{
     return new Integer( redisPort ).intValue();
   }
   
+  public String getZuulServerAddr() {
+	return zuulServerAddr;
+  }
   
 }

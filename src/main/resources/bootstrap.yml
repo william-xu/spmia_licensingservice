@@ -21,9 +21,15 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: http://192.168.43.80:8761/eureka/
-
       
-#security:
-#  oauth2:
-#   resource:
-#      userInfoUri: http://192.168.43.104:9999/auth/user
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://192.168.43.104:9999/auth/user
+#    client:
+#      clientId: eagleeye
+#      clientSecret: thisissecret
+
+#ribbon:
+#  eureka:
+#    enabled: true
