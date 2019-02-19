@@ -1,5 +1,8 @@
-# Introduction
+# 许可证服务
 
-demo from John Carnell
+* 使用OAtuh2服务校验调用方
+* 通过配置中心自动配置
+* 通过zuul路由到组织服务
+* 获取指定组织许可证方法添加断路器配置
+* 使用sleuth和zipkin进行分布式跟踪
 
-use  Spring Boot 2.0.6.RELEASE instead of 1.4.4.RELEASE
